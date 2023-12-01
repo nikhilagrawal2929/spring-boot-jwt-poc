@@ -53,3 +53,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Other configurations or beans if needed
 }
+
+{
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Arrays.asList(process.env.DOMAIN_NAME));
+    configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(Arrays.asList(HttpHeaders.ACCEPT, HttpHeaders.CONTENT_TYPE));
+    configuration.setAllowCredentials(true);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+
+    
+return source;
+}
+.headers()
+                .frameOptions().disable()
+                .xssProtection().and()
+                .contentSecurityPolicy("default-src 'self';")
+                .and()
+                .cacheControl().disable()
+                .and()
+                .contentTypeOptions().noSniff()
+                .and()
+                .referrerPolicy(ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN)
+                .and()
+                .permissionsPolicy().policy("geolocation=(),midi=(),sync-xhr=(),microphone=(0,camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=0)")
+                .and()
+                .build();
