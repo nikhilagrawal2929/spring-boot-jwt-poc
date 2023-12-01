@@ -23,39 +23,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .logout()
                 .permitAll()
                 .and()
-            .httpBasic();
-
-        // Add your custom headers
-        http.headers()
+            .httpBasic()
+                .and()
+            .headers()
                 .httpStrictTransportSecurity()
                     .includeSubDomains(true)
                     .maxAgeInSeconds(31536000)
                     .preload(true)
                     .and()
                 .contentSecurityPolicy("default-src 'self';")
-                .xssProtection()
-                    .block(true)
-                    .and()
-                .frameOptions()
-                    .deny()
-                    .and()
-                .contentTypeOptions()
-                    .nosniff()
-                    .and()
-                .referrerPolicy()
-                    .strictOrigin()
-                    .and()
-                .pragma()
-                    .noCache()
-                    .and()
-                .cacheControl()
-                    .noCache()
-                    .and()
-                .addHeaderWriter((request, response) -> {
-                    response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
-                    response.setHeader("Access-Control-Allow-Origin", process.env.DOMAIN_NAME);
-                    response.setHeader("Permissions-Policy", "geolocation=(), midi=(), sync-xhr=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), fullscreen=self, payment=0");
-                });
+                .and()
+            .xssProtection()
+                .block(true)
+                .and()
+            .frameOptions()
+                .deny()
+                .and()
+            .contentTypeOptions()
+                .nosniff()
+                .and()
+            .referrerPolicy()
+                .strictOrigin()
+                .and()
+            .cacheControl()
+                .noCache()
+                .and()
+            .addHeaderWriter((request, response) -> {
+                response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+                response.setHeader("Access-Control-Allow-Origin", process.env.DOMAIN_NAME);
+                response.setHeader("Permissions-Policy", "geolocation=(), midi=(), sync-xhr=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), fullscreen=self, payment=0");
+            });
     }
 
     // Other configurations or beans if needed
