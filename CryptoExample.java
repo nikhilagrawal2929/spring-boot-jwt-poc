@@ -33,26 +33,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .contentSecurityPolicy("default-src 'self';")
                 .and()
-            .xssProtection()
-                .block(true)
+                .xssProtection()
+                    .block(true)
                 .and()
-            .frameOptions()
-                .deny()
+                .frameOptions()
+                    .deny()
                 .and()
-            .contentTypeOptions()
-                .nosniff()
-                .and()
-            .referrerPolicy()
-                .strictOrigin()
+                .addHeaderWriter((request, response) -> {
+                    response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+                    response.setHeader("Access-Control-Allow-Origin", process.env.DOMAIN_NAME);
+                    response.setHeader("Permissions-Policy", "geolocation=(), midi=(), sync-xhr=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), fullscreen=self, payment=0");
+                })
+                .referrerPolicy()
+                    .strictOrigin()
                 .and()
             .cacheControl()
-                .noCache()
-                .and()
-            .addHeaderWriter((request, response) -> {
-                response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
-                response.setHeader("Access-Control-Allow-Origin", process.env.DOMAIN_NAME);
-                response.setHeader("Permissions-Policy", "geolocation=(), midi=(), sync-xhr=(), microphone=(), camera=(), magnetometer=(), gyroscope=(), fullscreen=self, payment=0");
-            });
+                .disable(); // If you want to customize Cache-Control headers
     }
 
     // Other configurations or beans if needed
